@@ -1,0 +1,63 @@
+// P11725
+
+package week3;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+public class T3 {
+
+	public static int N;
+	public static ArrayList<ArrayList<Integer>> tree;
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		N = Integer.parseInt(st.nextToken());
+
+		tree = new ArrayList<>();
+		for (int i = 0; i < N + 1; i++)
+			tree.add(new ArrayList<>());
+
+		for (int i = 0; i < N - 1; i++) {
+			st = new StringTokenizer(br.readLine());
+			int first = Integer.parseInt(st.nextToken());
+			int second = Integer.parseInt(st.nextToken());
+			tree.get(first).add(second);
+			tree.get(second).add(first);
+		}
+
+		int[] parent = new int[N + 1];
+		boolean[] visited = new boolean[N + 1]; // 방문 여부 확인용 배열
+
+		Queue<Integer> q = new LinkedList<Integer>();
+		q.offer(1);
+		parent[1] = 1;
+		visited[1] = true;
+
+		while (!(q.isEmpty())) {
+			int node = q.poll();
+
+			for (int next_node : tree.get(node)) {
+				if (!visited[next_node]) {
+					visited[next_node] = true;
+					q.offer(next_node);
+					parent[next_node] = node;
+//					System.out.println("visited -> " + next_node + " " + "parent[" + next_node + "] : "+ parent[next_node]);
+				}
+			}
+		}
+
+		for (int i = 2; i < N + 1; i++) {
+			System.out.println(parent[i]);
+		}
+
+	}
+
+}
